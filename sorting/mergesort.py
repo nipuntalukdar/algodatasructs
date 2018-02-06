@@ -35,7 +35,7 @@ def merge_sort(arr, start, end):
 if __name__ == '__main__':
     j = 1
     while j < 501:
-        x = [random.randint(0, 9999999999999) for i in range(0,1)]
+        x = [random.randint(0, 9999999999999) for i in range(0,j)]
         y = [a for a in x]
         z = [a for a in x]
         y.sort()
