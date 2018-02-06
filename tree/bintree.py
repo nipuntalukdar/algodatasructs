@@ -65,13 +65,13 @@ class TreeNode(object):
             self.r.print_in_order()
         if self.l:
             self.l.print_in_order()
-    
+
     def leaf(self):
         return not self.l and not self.r
 
     def if_right_child(self, parent):
         return parent.r == self
-    
+
     def min_value(self):
         if not self: return None
         ret = self
@@ -85,6 +85,28 @@ class TreeNode(object):
         while ret.r:
             ret = ret.r
         return ret.val
+
+    def max_depth(self):
+        depthl = 0
+        depthr = 0
+        if self.l:
+            depthl += self.l.max_depth()
+        if self.r:
+            depthr = self.r.max_depth()
+        return 1 + max(depthl, depthr)
+
+    def kth_max(self, k):
+        if self.r:
+            val, k, found = self.r.kth_max(k)
+            if k == 0 and found:
+                return val, k, found
+        if k == 0:
+            return self.val, 0, True
+        k -= 1
+        if self.l:
+            val, k, found = self.l.kth_max(k)
+            return val, k, found
+        return self.val, k, False
 
     def delete(self, val):
         if self.val == val:
@@ -109,6 +131,11 @@ class TreeNode(object):
 class Tree(object):
     def __init__(self, root):
         self.root = root
+
+    def max_depth(self):
+        if not self.root:
+            return 0
+        return self.root.max_depth()
 
     def print_paths(self):
         if not self.root:
@@ -142,7 +169,7 @@ class Tree(object):
         if not self.root:
             return
         self.root = self.root.delete(val)
-    
+
     def max_value(self):
         if not self.root:
             return None
@@ -152,7 +179,28 @@ class Tree(object):
         if not self.root:
             return None
         return self.root.min_value()
-                
+
+    def kth_max(self, k):
+        if not self.root:
+            return -1, k
+        return self.root.kth_max(k)
+
+def check_kth():
+    tree = Tree(None)
+    j = 500
+    x = [random.randint(1, 10000000) for a in range(0,j)]
+    for a in x:
+        tree.add(a)
+    i = 0
+    x = [a for a in set(x)]
+    x.sort()
+    while i < j:
+        val = tree.kth_max(i)
+        if val[0] != x[j - 1 - i]:
+            print "Problem ", val[0], x[j - 1 - i], j - 1 -i, x
+            break
+        i += 1
+
 if __name__ == '__main__':
     tree = Tree(None)
     tree.add(100)
@@ -179,7 +227,7 @@ if __name__ == '__main__':
     x = []
     i = 0
     while i < 100:
-        x.append(random.randint(1, 10000))
+        x.append(random.randint(1, 100))
         i += 1
     for num in x:
         tree.add(num)
@@ -198,5 +246,4 @@ if __name__ == '__main__':
         tree.add(num)
     print("Size after adding 100 random numbers {}".format(tree.count()))
     tree.print_paths()
-
-    
+    check_kth()
