@@ -34,7 +34,19 @@ class lst(object):
            evenel.next = penultimate.next
            penultimate.next = evenel
            it = it.next
-
+    def reverse(self):
+        prev = self.end
+        cur = self.begin
+        nxt = self.begin.next
+        while True:
+            if nxt == self.end:
+                self.begin = cur
+                cur.next = prev
+                return
+            cur.next = prev
+            prev = cur
+            cur = nxt
+            nxt = cur.next
 
     def __str__(self):
         if self.begin is None:
@@ -49,4 +61,6 @@ class lst(object):
 x = lst(1,2,3,4,5,6,7,8,9,10,11,12)
 print x
 x.move_even_to_end()
+print x
+x.reverse()
 print x
